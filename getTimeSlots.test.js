@@ -1,157 +1,77 @@
 const availTimeSlots = require('./getTimeSlots')
 
-// const availabilities = [
-//   {
-//     startTime: moment().subtract(8, 'hours'),
-//     endTime: moment().subtract(4, 'hours')
-//   },
-//   {
-//     startTime: moment().subtract(2, 'hours'),
-//     endTime: moment()
-//   }
-// ]
-//
-// const bookings = [
-//   {
-//     startTime: moment().subtract(6, 'hours'),
-//     endTime: moment().subtract(5, 'hours')
-//   },
-//   {
-//     startTime: moment().subtract(2, 'hours'),
-//     endTime: moment().subtract(1, 'hours')
-//   }
-// ]
+const from = (startTime) => ({
+  to: (endTime) => ({startTime, endTime})
+})
 
-
-it('returns array of available time slots', () => {
-  let availabilities = [
-    {
-      startTime: 1,
-      endTime: 4
-    },
-    {
-      startTime: 8,
-      endTime: 10
-    }
+it('removes spans landing neatly on start and end times', () => {
+  const availabilities = [
+    from(1).to(4),
+    from(8).to(10)
   ]
 
-  let bookings = [
-    {
-      startTime: 2,
-      endTime: 3
-    },
-    {
-      startTime: 8,
-      endTime: 9
-    }
+  const bookings = [
+    from(2).to(3),
+    from(8).to(9)
   ]
 
-  let results = [
-    {
-      startTime: 1,
-      endTime: 2
-    },
-    {
-      startTime: 3,
-      endTime: 4
-    },
-    {
-      startTime: 9,
-      endTime: 10
-    }
+  const results = [
+    from(1).to(2),
+    from(3).to(4),
+    from(9).to(10)
   ]
 
   expect(availTimeSlots(availabilities, bookings)).toEqual(results)
+})
 
-  availabilities = [
-    {
-      startTime: 1,
-      endTime: 6
-    },
-    {
-      startTime: 8,
-      endTime: 12
-    }
+it('removes entire availability', () => {
+  const availabilities = [
+    from(1).to(6),
+    from(8).to(12)
   ]
 
-  bookings = [
-    {
-      startTime: 1,
-      endTime: 3
-    },
-    {
-      startTime: 8,
-      endTime: 12
-    }
+  const bookings = [
+    from(1).to(3),
+    from(8).to(12)
   ]
 
-  results = [
-    {
-      startTime: 3,
-      endTime: 6
-    }
+  const results = [
+    from(3).to(6),
   ]
 
   expect(availTimeSlots(availabilities, bookings)).toEqual(results)
+})
 
-  availabilities = [
-    {
-      startTime: 1,
-      endTime: 6
-    },
-    {
-      startTime: 8,
-      endTime: 12
-    }
+it('removes start and end time from availability without affecting irrelevant availability', () => {
+  const availabilities = [
+    from(1).to(6),
+    from(8).to(12)
   ]
 
-  bookings = [
-    {
-      startTime: 1,
-      endTime: 3
-    },
-    {
-      startTime: 4,
-      endTime: 6
-    }
+  const bookings = [
+    from(1).to(3),
+    from(4).to(6)
   ]
-
-  results = [
-    {
-      startTime: 3,
-      endTime: 4
-    },
-    {
-      startTime: 8,
-      endTime: 12
-    }
+  const results = [
+    from(3).to(4),
+    from(8).to(12),
   ]
 
   expect(availTimeSlots(availabilities, bookings)).toEqual(results)
+})
 
-  availabilities = [
-    {
-      startTime: 1,
-      endTime: 6
-    }
+it('removes start and end time from availability', () => {
+  const availabilities = [
+    from(1).to(6)
   ]
 
-  bookings = [
-    {
-      startTime: 1,
-      endTime: 3
-    },
-    {
-      startTime: 4,
-      endTime: 6
-    }
+  const bookings = [
+    from(1).to(3),
+    from(4).to(6)
   ]
 
-  results = [
-    {
-      startTime: 3,
-      endTime: 4
-    }
+  const results = [
+    from(3).to(4)
   ]
 
   expect(availTimeSlots(availabilities, bookings)).toEqual(results)
