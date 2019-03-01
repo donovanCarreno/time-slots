@@ -1,41 +1,12 @@
-// const moment = require('moment')
-
-// function availTimeSlots (availabilities, booked) {
-//   let results = []
-//   let index = 0
-//
-//   availabilities.forEach(a => {
-//     let start = a.startTime
-//     let end = a.endTime
-//
-//     for (index; index < booked.length; index++) {
-//       let booking = booked[index]
-//       let bookedStart = booking.startTime
-//       let bookedEnd = booking.endTime
-//
-//       if (bookedStart.isSame(start)) {
-//         results.push('equal')
-//       } else if (bookedStart.isSameOrAfter(start) && bookedStart.isSameOrBefore(end)) {
-//         results.push('between')
-//       } else {
-//         results.push({startTime: start, endTime: end})
-//         index++
-//         break
-//       }
-//     }
-//   })
-//
-//   return results
-// }
-
 function availTimeSlots (availabilities, booked) {
   let results = []
   let index = 0
 
-  availabilities.forEach((a, i) => {
+  availabilities.forEach((a, i, arr) => {
     let start = a.startTime
     let end = a.endTime
     let bookings = false
+    let leftover = false
 
     for (index; index < booked.length; index++) {
       bookings = true
@@ -55,6 +26,7 @@ function availTimeSlots (availabilities, booked) {
         if (bookedEnd < end) {
           results.push({startTime: start, endTime: bookedStart})
           start = bookedEnd
+          leftover = start < end && arr.length - 1 === i
         } else {
           results.push({startTime: start, endTime: bookedStart})
         }
@@ -64,7 +36,7 @@ function availTimeSlots (availabilities, booked) {
       }
     }
 
-    if (!bookings) {
+    if (!bookings || leftover) {
       results.push({startTime: start, endTime: end})
     }
   })

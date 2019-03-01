@@ -76,3 +76,22 @@ it('removes start and end time from availability', () => {
 
   expect(availTimeSlots(availabilities, bookings)).toEqual(results)
 })
+
+it('works when booking lands in second available time slot', () => {
+  const availabilities = [
+    from(1).to(6),
+    from(8).to(12)
+  ]
+
+  const bookings = [
+    from(9).to(10)
+  ]
+
+  const results = [
+    from(1).to(6),
+    from(8).to(9),
+    from(10).to(12)
+  ]
+
+  expect(availTimeSlots(availabilities, bookings)).toEqual(results)
+})
